@@ -1,5 +1,28 @@
 love.window.setTitle("Demons vs Missionaries")
 
+SCREEN_WIDTH= love.graphics.getWidth()
+SCREEN_HEIGHT = love.graphics.getHeight()
+
+RIGHT_DEMONS = 3
+RIGHT_MONKS = 3
+
+LEFT_DEMONS = 0
+LEFT_MONKS = 0
+
+
+function CheckGameLogic()
+    if RIGHT_DEMONS > RIGHT_MONKS and RIGHT_MONKS > 0 then
+        print("right demons: ", RIGHT_DEMONS , " right monks: ", RIGHT_MONKS)
+        print("left demons: ", LEFT_DEMONS , " left monks: ", LEFT_MONKS)
+        print("Right side demons ate monks")
+    end
+    if LEFT_DEMONS > LEFT_MONKS and LEFT_MONKS > 0 then
+        print("right demons: ", RIGHT_DEMONS , " right monks: ", RIGHT_MONKS)
+        print("left demons: ", LEFT_DEMONS , " left monks: ", LEFT_MONKS)
+        print("Left side demons ate monks")
+    end
+end
+
 local boatDriver = 20
 BoatDriverTaken = false
 local boatPassenger = 21
@@ -90,23 +113,27 @@ function Missionary:checkClick(i)
     if Move == false and AtRight == true then
         if self.position == boatDriver and BoatDriverTaken == true then
             self.position = rightSide[i]
+            RIGHT_MONKS = RIGHT_MONKS + 1
             BoatDriverTaken = false
-            print(i, " right landed ", self.position)
+            --print(i, " right landed ", self.position)
 
         elseif self.position == boatPassenger and BoatPassengerTaken == true then
             self.position = rightSide[i]
+            RIGHT_MONKS = RIGHT_MONKS + 1
             BoatPassengerTaken = false
-            print(i, " right landed ", self.position)
+            --print(i, " right landed ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == false then
             self.position = boatDriver
+            RIGHT_MONKS = RIGHT_MONKS - 1
             BoatDriverTaken = true
-            print(i, " right driving now ", self.position)
+            --print(i, " right driving now ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == true then
             self.position = boatPassenger
+            RIGHT_MONKS = RIGHT_MONKS - 1
             BoatPassengerTaken = true
-            print(i, " right passenging now ", self.position)
+            --print(i, " right passenging now ", self.position)
 
         elseif BoatDriverTaken == true and BoatPassengerTaken == true then
             return 0
@@ -116,23 +143,27 @@ function Missionary:checkClick(i)
     if Move == false and AtRight == false then
         if self.position == boatDriver and BoatDriverTaken == true then
             self.position = leftSide[i]
+            LEFT_MONKS = LEFT_MONKS + 1
             BoatDriverTaken = false
-            print(i, " left landed ", self.position)
+            --print(i, " left landed ", self.position)
 
         elseif self.position == boatPassenger and BoatPassengerTaken == true then
             self.position = leftSide[i]
+            LEFT_MONKS = LEFT_MONKS + 1
             BoatPassengerTaken = false
-            print(i, " left landed ", self.position)
+            --print(i, " left landed ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == false then
             self.position = boatDriver
+            LEFT_MONKS = LEFT_MONKS - 1
             BoatDriverTaken = true
-            print(i, " left driving now ", self.position)
+            --print(i, " left driving now ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == true then
             self.position = boatPassenger
+            LEFT_MONKS = LEFT_MONKS - 1
             BoatPassengerTaken = true
-            print(i, " left passenging now ", self.position)
+            --print(i, " left passenging now ", self.position)
             
         elseif BoatDriverTaken == true and BoatPassengerTaken == true then
             return 0
@@ -156,23 +187,27 @@ function Demon:checkClick(i)
     if Move == false and AtRight == true then
         if self.position == boatDriver and BoatDriverTaken == true then
             self.position = rightSide[i]
+            RIGHT_DEMONS = RIGHT_DEMONS + 1
             BoatDriverTaken = false
-            print(i, " right landed ", self.position)
+            --print(i, " right landed ", self.position)
 
         elseif self.position == boatPassenger and BoatPassengerTaken == true then
             self.position = rightSide[i]
+            RIGHT_DEMONS = RIGHT_DEMONS + 1
             BoatPassengerTaken = false
-            print(i, " right landed ", self.position)
+            --print(i, " right landed ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == false then
             self.position = boatDriver
+            RIGHT_DEMONS = RIGHT_DEMONS - 1
             BoatDriverTaken = true
-            print(i, " right driving now ", self.position)
+            --print(i, " right driving now ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == true then
             self.position = boatPassenger
+            RIGHT_DEMONS = RIGHT_DEMONS - 1
             BoatPassengerTaken = true
-            print(i, " right passenging now ", self.position)
+            --print(i, " right passenging now ", self.position)
 
         elseif BoatDriverTaken == true and BoatPassengerTaken == true then
             return 0
@@ -182,23 +217,27 @@ function Demon:checkClick(i)
     if Move == false and AtRight == false then
         if self.position == boatDriver and BoatDriverTaken == true then
             self.position = leftSide[i]
+            LEFT_DEMONS = LEFT_DEMONS + 1
             BoatDriverTaken = false
-            print(i, " left landed ", self.position)
+           -- print(i, " left landed ", self.position)
 
         elseif self.position == boatPassenger and BoatPassengerTaken == true then
             self.position = leftSide[i]
+            LEFT_DEMONS = LEFT_DEMONS + 1
             BoatPassengerTaken = false
-            print(i, " left landed ", self.position)
+            --print(i, " left landed ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == false then
             self.position = boatDriver
+            LEFT_DEMONS = LEFT_DEMONS - 1
             BoatDriverTaken = true
-            print(i, " left driving now ", self.position)
+            --print(i, " left driving now ", self.position)
 
         elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == true then
             self.position = boatPassenger
+            LEFT_DEMONS = LEFT_DEMONS - 1
             BoatPassengerTaken = true
-            print(i, " left passenging now ", self.position)
+            --print(i, " left passenging now ", self.position)
             
         elseif BoatDriverTaken == true and BoatPassengerTaken == true then
             return 0
@@ -272,6 +311,12 @@ end
 
 function love.update(deltaTime)
 
+    -- print("Right side Monks: ", RIGHT_MONKS)
+    -- print("Left side Monks: ", LEFT_MONKS)
+
+    -- print("Right side Demons: ", RIGHT_DEMONS)
+    -- print("Left side Demons: ", LEFT_DEMONS)
+
     function love.mousepressed(x, y, button, istouch)
         if button == 1 then
             if x >= Missionary1:getCords() and x <= Missionary1:getCords() + 10 and y >= 500 then
@@ -302,7 +347,12 @@ function love.update(deltaTime)
     -- Boat move logic
     function love.keypressed(key)
         if key == "space" then
-            Move = true
+            if BoatDriverTaken == true then
+                Move = true
+                CheckGameLogic()
+            elseif BoatDriverTaken == false then
+                print("add a driver dumbass")
+            end
         end
     end
 
@@ -325,6 +375,10 @@ function love.draw()
         GraphicsLoad()
         loadOnce = true
     end
+
+    love.graphics.print("sup bitches", 350, 100, 0, 2, 2)
+    love.graphics.print("press on cubes to add them into the raft", 175, 150, 0, 2, 2)
+    love.graphics.print("press SPACE to paddle the raft", 250, 200, 0, 2, 2)
 
     Boat:draw()
 
