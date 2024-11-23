@@ -1,13 +1,13 @@
 love.window.setTitle("Demons vs Missionaries")
 
---All the position entities can g0
+-- * All the position entities can goto
 local boatDriver = 69
 local boatPassenger = 420
 
 local leftSide = {1, 2, 3, 4, 5, 6}
 local rightSide = {10, 20, 30, 40, 50, 60}
 
--- run this function once to draw item once drawing to every frame fucks with the moving shit
+-- run this function once to draw shapes to screen once calling this every frame fucks with the moving shapes
 function GraphicsLoad()
     --Left Ground
     love.graphics.setColor(0, 1, 0)
@@ -21,7 +21,7 @@ function GraphicsLoad()
     love.graphics.setColor(1,1,1)
 end
 
--- Base Entity
+-- * Base Entity
 Entity = {}
 Entity.__index = Entity
 
@@ -36,11 +36,11 @@ end
 function Entity:draw(color)
     local drawColor = {}
 
-    if color == 1 then drawColor = {1, 0.5, 0} end --Missionary color (Gold)
-    if color == 2 then drawColor = {1, 0, 0} end --Demon color (Red)
+    if color == 1 then drawColor = {1, 0.5, 0} end -- * Missionary color (Gold)
+    if color == 2 then drawColor = {1, 0, 0} end -- * Demon color (Red)
 
 
-    --This is spaghetti as fuck and fucking stupid but i dont know what else to do
+    --this is spaghetti as fuck and fucking stupid but i dont know what else to do
     if self.position == boatDriver then end
     if self.position == boatPassenger then end
 
@@ -92,7 +92,7 @@ Boats.__index = Boats
 
 function Boats.new()
     local self = setmetatable({}, Boats)
-    self.point = 1 -- 1 = right / 0 - left
+    self.point = 1 -- * 1 = right / 0 - left
     self.isGoing = false
     self.pos = 450
     return self
