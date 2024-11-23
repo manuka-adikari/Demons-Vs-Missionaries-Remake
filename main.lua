@@ -1,11 +1,12 @@
 love.window.setTitle("Demons vs Missionaries")
 
--- * All the position entities can goto
-local boatDriver = 69
-local boatPassenger = 420
+local boatDriver = 20
+BoatDriverTaken = false
+local boatPassenger = 21
+BoatPassengerTaken = false
 
-local leftSide = {1, 2, 3, 4, 5, 6}
-local rightSide = {10, 20, 30, 40, 50, 60}
+local rightSide = {1, 2, 3, 4, 5, 6}
+local leftSide = {11, 12, 13, 14, 15, 16}
 
 -- run this function once to draw shapes to screen once calling this every frame fucks with the moving shapes
 function GraphicsLoad()
@@ -27,7 +28,6 @@ EntityHeight = 50
 DriverXCords = 0
 PassengerXCords = 0
 
--- * Base Entity
 Entity = {}
 Entity.__index = Entity
 
@@ -37,6 +37,10 @@ end
 
 function Entity:getPosition()
     return self.position
+end
+
+function Entity:getCords()
+    return self.cords[1]
 end
 
 function Entity:draw(color)
@@ -50,19 +54,19 @@ function Entity:draw(color)
     if self.position == boatDriver then self.cords = {DriverXCords, 500} end
     if self.position == boatPassenger then self.cords = {PassengerXCords, 500} end
 
-    if self.position == leftSide[1] then self.cords = {600, 500} end
-    if self.position == leftSide[2] then self.cords = {625, 500} end
-    if self.position == leftSide[3] then self.cords = {650, 500} end
-    if self.position == leftSide[4] then self.cords = {675, 500} end
-    if self.position == leftSide[5] then self.cords = {700, 500} end
-    if self.position == leftSide[6] then self.cords = {725, 500}  end
+    if self.position == rightSide[1] then self.cords = {600, 500} end
+    if self.position == rightSide[2] then self.cords = {625, 500} end
+    if self.position == rightSide[3] then self.cords = {650, 500} end
+    if self.position == rightSide[4] then self.cords = {675, 500} end
+    if self.position == rightSide[5] then self.cords = {700, 500} end
+    if self.position == rightSide[6] then self.cords = {725, 500}  end
 
-    if self.position == rightSide[6] then self.cords = {75, 500} end
-    if self.position == rightSide[5] then self.cords = {100, 500} end
-    if self.position == rightSide[4] then self.cords = {125, 500} end
-    if self.position == rightSide[3] then self.cords = {150, 500} end
-    if self.position == rightSide[2] then self.cords = {175, 500} end
-    if self.position == rightSide[1] then self.cords = {200, 500} end
+    if self.position == leftSide[6] then self.cords = {75, 500} end
+    if self.position == leftSide[5] then self.cords = {100, 500} end
+    if self.position == leftSide[4] then self.cords = {125, 500} end
+    if self.position == leftSide[3] then self.cords = {150, 500} end
+    if self.position == leftSide[2] then self.cords = {175, 500} end
+    if self.position == leftSide[1] then self.cords = {200, 500} end
     
     love.graphics.setColor(drawColor)
     love.graphics.rectangle("fill", self.cords[1], self.cords[2], EntityWidth, EntityHeight)
@@ -78,7 +82,62 @@ function Missionary.new(pos)
     local self = setmetatable({}, Missionary)
     self.position = pos
     self.cords = {0, 0}
+    self.onGround = true
     return self
+end
+
+function Missionary:checkClick(i)
+    if Move == false and AtRight == true then
+        if self.position == boatDriver and BoatDriverTaken == true then
+            self.position = rightSide[i]
+            BoatDriverTaken = false
+            print(i, " right landed ", self.position)
+
+        elseif self.position == boatPassenger and BoatPassengerTaken == true then
+            self.position = rightSide[i]
+            BoatPassengerTaken = false
+            print(i, " right landed ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == false then
+            self.position = boatDriver
+            BoatDriverTaken = true
+            print(i, " right driving now ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == true then
+            self.position = boatPassenger
+            BoatPassengerTaken = true
+            print(i, " right passenging now ", self.position)
+
+        elseif BoatDriverTaken == true and BoatPassengerTaken == true then
+            return 0
+        end
+    end
+
+    if Move == false and AtRight == false then
+        if self.position == boatDriver and BoatDriverTaken == true then
+            self.position = leftSide[i]
+            BoatDriverTaken = false
+            print(i, " left landed ", self.position)
+
+        elseif self.position == boatPassenger and BoatPassengerTaken == true then
+            self.position = leftSide[i]
+            BoatPassengerTaken = false
+            print(i, " left landed ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == false then
+            self.position = boatDriver
+            BoatDriverTaken = true
+            print(i, " left driving now ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == true then
+            self.position = boatPassenger
+            BoatPassengerTaken = true
+            print(i, " left passenging now ", self.position)
+            
+        elseif BoatDriverTaken == true and BoatPassengerTaken == true then
+            return 0
+        end
+    end
 end
 
 --OOP fancy fancy
@@ -91,6 +150,60 @@ function Demon.new(pos)
     self.position = pos
     self.cords = {0, 0}
     return self
+end
+
+function Demon:checkClick(i)
+    if Move == false and AtRight == true then
+        if self.position == boatDriver and BoatDriverTaken == true then
+            self.position = rightSide[i]
+            BoatDriverTaken = false
+            print(i, " right landed ", self.position)
+
+        elseif self.position == boatPassenger and BoatPassengerTaken == true then
+            self.position = rightSide[i]
+            BoatPassengerTaken = false
+            print(i, " right landed ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == false then
+            self.position = boatDriver
+            BoatDriverTaken = true
+            print(i, " right driving now ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 0 and self.position < 10 and BoatDriverTaken == true then
+            self.position = boatPassenger
+            BoatPassengerTaken = true
+            print(i, " right passenging now ", self.position)
+
+        elseif BoatDriverTaken == true and BoatPassengerTaken == true then
+            return 0
+        end
+    end
+
+    if Move == false and AtRight == false then
+        if self.position == boatDriver and BoatDriverTaken == true then
+            self.position = leftSide[i]
+            BoatDriverTaken = false
+            print(i, " left landed ", self.position)
+
+        elseif self.position == boatPassenger and BoatPassengerTaken == true then
+            self.position = leftSide[i]
+            BoatPassengerTaken = false
+            print(i, " left landed ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == false then
+            self.position = boatDriver
+            BoatDriverTaken = true
+            print(i, " left driving now ", self.position)
+
+        elseif self.position ~= boatDriver and self.position >= 10 and self.position < 30 and BoatDriverTaken == true then
+            self.position = boatPassenger
+            BoatPassengerTaken = true
+            print(i, " left passenging now ", self.position)
+            
+        elseif BoatDriverTaken == true and BoatPassengerTaken == true then
+            return 0
+        end
+    end
 end
 
 Boats = {}
@@ -148,16 +261,45 @@ function love.load()
 
     Boat = Boats.new()
 
-    Missionary1 = Missionary.new(boatDriver)
-    Missionary2 = Missionary.new(leftSide[2])
-    Missionary3 = Missionary.new(leftSide[3])
+    Missionary1 = Missionary.new(rightSide[1])
+    Missionary2 = Missionary.new(rightSide[2])
+    Missionary3 = Missionary.new(rightSide[3])
 
-    Demon1 = Demon.new(boatPassenger)
-    Demon2 = Demon.new(leftSide[5])
-    Demon3 = Demon.new(leftSide[6])
+    Demon1 = Demon.new(rightSide[4])
+    Demon2 = Demon.new(rightSide[5])
+    Demon3 = Demon.new(rightSide[6])
 end
 
 function love.update(deltaTime)
+
+    function love.mousepressed(x, y, button, istouch)
+        if button == 1 then
+            if x >= Missionary1:getCords() and x <= Missionary1:getCords() + 10 and y >= 500 then
+                Missionary1:checkClick(1)
+            
+            elseif x >= Missionary2:getCords() and x <= Missionary2:getCords() + 10 and y >= 500 then
+                Missionary2:checkClick(2)
+            
+            elseif x >= Missionary3:getCords() and x <= Missionary3:getCords() + 10 and y >= 500 then
+                Missionary3:checkClick(3)
+            end
+
+            if x >= Demon1:getCords() and x <= Demon1:getCords() + 10 and y >= 500 then
+                Demon1:checkClick(4)
+            
+            elseif x >= Demon2:getCords() and x <= Demon2:getCords() + 10 and y >= 500 then
+                Demon2:checkClick(5)
+            
+            elseif x >= Demon3:getCords() and x <= Demon3:getCords() + 10 and y >= 500 then
+                Demon3:checkClick(6)
+            end
+        end
+      end
+
+    --Missionary1:checkClick(1)
+    --Missionary3:checkClick(3)
+
+    -- Boat move logic
     function love.keypressed(key)
         if key == "space" then
             Move = true
@@ -172,10 +314,9 @@ function love.update(deltaTime)
             Boat:moveRight(deltaTime)
         end
     end
+
+    --Teleports riders to the boat
     Boat:updateSeats()
-    print("PassengerCords", PassengerXCords)
-    print("DriverCords", DriverXCords)
-    print(Move, AtRight)
 end
 
 function love.draw()
