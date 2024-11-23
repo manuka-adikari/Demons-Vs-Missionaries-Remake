@@ -7,8 +7,8 @@ local boatPassenger = 420
 local leftSide = {1, 2, 3, 4, 5, 6}
 local rightSide = {10, 20, 30, 40, 50, 60}
 
+-- run this function once to draw item once drawing to every frame fucks with the moving shit
 function GraphicsLoad()
-  
     --Left Ground
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", 0, 550, 250, 250)
@@ -39,6 +39,8 @@ function Entity:draw(color)
     if color == 1 then drawColor = {1, 0.5, 0} end --Missionary color (Gold)
     if color == 2 then drawColor = {1, 0, 0} end --Demon color (Red)
 
+
+    --This is spaghetti as fuck and fucking stupid but i dont know what else to do
     if self.position == boatDriver then end
     if self.position == boatPassenger then end
 
@@ -61,6 +63,7 @@ function Entity:draw(color)
     love.graphics.setColor(1,1,1)
 end
 
+-- mm missionary position
 Missionary = {}
 Missionary.__index = Missionary
 setmetatable(Missionary, Entity)
@@ -72,6 +75,7 @@ function Missionary.new(pos)
     return self
 end
 
+--OOP fancy fancy
 Demon = {}
 Demon.__index = Demon
 setmetatable(Demon, Entity)
@@ -138,6 +142,8 @@ function love.load()
     Missionary2 = Missionary.new(leftSide[2])
     Missionary3 = Missionary.new(leftSide[3])
 
+
+    -- test code is here to see if both sides render the entities remove this shit
     -- ! Test code
     Missionary4 = Missionary.new(rightSide[1])
     Missionary5 = Missionary.new(rightSide[2])
@@ -187,10 +193,10 @@ function love.draw()
     Demon6:draw(2)
     --!
 
+    -- TODO: write a better input system later
     function love.keypressed(key)
         if key == "space" then
            Boat:go()
         end
      end
-
 end
