@@ -21,6 +21,12 @@ function GraphicsLoad()
     love.graphics.setColor(1,1,1)
 end
 
+EntityWidth = 10
+EntityHeight = 50
+
+DriverXCords = 0
+PassengerXCords = 0
+
 -- * Base Entity
 Entity = {}
 Entity.__index = Entity
@@ -41,8 +47,8 @@ function Entity:draw(color)
 
 
     --this is spaghetti as fuck and fucking stupid but i dont know what else to do
-    if self.position == boatDriver then end
-    if self.position == boatPassenger then end
+    if self.position == boatDriver then self.cords = {DriverXCords, 500} end
+    if self.position == boatPassenger then self.cords = {PassengerXCords, 500} end
 
     if self.position == leftSide[1] then self.cords = {600, 500} end
     if self.position == leftSide[2] then self.cords = {625, 500} end
@@ -59,7 +65,7 @@ function Entity:draw(color)
     if self.position == rightSide[1] then self.cords = {200, 500} end
     
     love.graphics.setColor(drawColor)
-    love.graphics.rectangle("fill", self.cords[1], self.cords[2], 10, 50)
+    love.graphics.rectangle("fill", self.cords[1], self.cords[2], EntityWidth, EntityHeight)
     love.graphics.setColor(1,1,1)
 end
 
@@ -104,12 +110,6 @@ function Boats:draw()
     love.graphics.setColor(1, 1, 1)
 end
 
-function Boats:loc()
-    print(self.pos) 
-end
-
---local rightCords = 450
-
 function Boats:moveLeft(dt)
     local leftCords = 255
 
@@ -135,7 +135,12 @@ function Boats:moveRight(dt)
         self.pos = self.pos + 100 * dt
     end
 end
-    
+
+function Boats:updateSeats()
+    --Turns float -> ints so tables dont fucking freak out
+    PassengerXCords = math.floor(self.pos + 10)
+    DriverXCords = math.floor(self.pos + 50)
+end
 
 function love.load()
     Move = false
@@ -143,27 +148,13 @@ function love.load()
 
     Boat = Boats.new()
 
-    Missionary1 = Missionary.new(leftSide[1])
+    Missionary1 = Missionary.new(boatDriver)
     Missionary2 = Missionary.new(leftSide[2])
     Missionary3 = Missionary.new(leftSide[3])
 
-
-    -- test code is here to see if both sides render the entities remove this shit
-    -- ! Test code
-    Missionary4 = Missionary.new(rightSide[1])
-    Missionary5 = Missionary.new(rightSide[2])
-    Missionary6 = Missionary.new(rightSide[3])
-    -- !
-
-    Demon1 = Demon.new(leftSide[4])
+    Demon1 = Demon.new(boatPassenger)
     Demon2 = Demon.new(leftSide[5])
     Demon3 = Demon.new(leftSide[6])
-
-    -- ! Test code
-    Demon4 = Demon.new(rightSide[4])
-    Demon5 = Demon.new(rightSide[5])
-    Demon6 = Demon.new(rightSide[6])
-    --!
 end
 
 function love.update(deltaTime)
@@ -181,6 +172,9 @@ function love.update(deltaTime)
             Boat:moveRight(deltaTime)
         end
     end
+    Boat:updateSeats()
+    print("PassengerCords", PassengerXCords)
+    print("DriverCords", DriverXCords)
     print(Move, AtRight)
 end
 
@@ -196,20 +190,8 @@ function love.draw()
     Missionary1:draw(1)
     Missionary2:draw(1)
     Missionary3:draw(1)
-
-    -- ! Test code
-    Missionary4:draw(1)
-    Missionary5:draw(1)
-    Missionary6:draw(1)
-    --!
   
     Demon1:draw(2)
     Demon2:draw(2)
     Demon3:draw(2)
-
-    -- ! Test code
-    Demon4:draw(2)
-    Demon5:draw(2)
-    Demon6:draw(2)
-    --!
 end
