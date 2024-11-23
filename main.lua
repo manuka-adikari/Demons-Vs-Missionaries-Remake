@@ -104,37 +104,42 @@ function Boats:draw()
     love.graphics.setColor(1, 1, 1)
 end
 
-function Boats:go()
-    local rightCords = 450
-    local leftCords = 255
-
-    if self.point == 1 then
-        if self.isGoing == false then
-            self.isGoing = true
-            self.pos = leftCords
-            self.point = 0
-            self.isGoing = false
-            print(self.isGoing)
-            print(self.pos)
-            print(self.point)
-        end
-    elseif self.point == 0 then 
-        if self.isGoing == false then
-            self.isGoing = true
-            self.pos = rightCords
-            self.point = 1
-            self.isGoing = false
-            print(self.isGoing)
-            print(self.pos)
-            print(self.point)
-        end
-    end
-    --print(self.isGoing)
-    --print(self.pos)
-    --print(self.point)
+function Boats:loc()
+    print(self.pos) 
 end
 
+--local rightCords = 450
+
+function Boats:moveLeft(dt)
+    local leftCords = 255
+
+    if self.pos <= leftCords then
+        Move = false
+        AtRight = false
+    end
+
+    if self.pos > leftCords then
+        self.pos = self.pos - 100 * dt
+    end
+end
+
+function Boats:moveRight(dt)
+    local rightCords = 450
+
+    if self.pos >= rightCords then
+        Move = false
+        AtRight = true
+    end
+
+    if self.pos < rightCords then
+        self.pos = self.pos + 100 * dt
+    end
+end
+    
+
 function love.load()
+    Move = false
+    AtRight = true
 
     Boat = Boats.new()
 
@@ -162,16 +167,31 @@ function love.load()
 end
 
 function love.update(deltaTime)
-  --print(love.mouse.getPosition())
+    function love.keypressed(key)
+        if key == "space" then
+            Move = true
+        end
+    end
+
+    if Move == true then
+        if AtRight == true then
+            Boat:moveLeft(deltaTime)
+        end
+        if AtRight == false then
+            Boat:moveRight(deltaTime)
+        end
+    end
+    print(Move, AtRight)
 end
 
 function love.draw()
     local loadOnce = false
     if loadOnce == false then
         GraphicsLoad()
-        Boat:draw()
         loadOnce = true
     end
+
+    Boat:draw()
 
     Missionary1:draw(1)
     Missionary2:draw(1)
@@ -192,11 +212,4 @@ function love.draw()
     Demon5:draw(2)
     Demon6:draw(2)
     --!
-
-    -- TODO: write a better input system later
-    function love.keypressed(key)
-        if key == "space" then
-           Boat:go()
-        end
-     end
 end
