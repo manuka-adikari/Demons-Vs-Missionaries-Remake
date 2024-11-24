@@ -8,5 +8,5 @@ just a remake of a childhood minigame i played
 
 - [x] Basic graphics and project structure
 - [ ] Actual sprites
-- [ ] Gameplay
-
+- [x] Gameplay
+- [ ] Game Logic
